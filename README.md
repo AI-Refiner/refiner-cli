@@ -32,9 +32,10 @@ OPENAI_API_KEY="API_KEY"
 
 ## Help
 
-You can run the --help option to learn about the `create` and `search` commands.
+The `--help` option can be used to learn about the `create` and `search` commands.
 
-```
+```shell
 refiner --help
-
+refiner create --help
+refiner search --help
 ```
