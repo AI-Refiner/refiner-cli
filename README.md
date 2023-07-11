@@ -30,6 +30,11 @@ PINECONE_ENVIRONMENT_NAME="ENV_NAME"
 OPENAI_API_KEY="API_KEY"
 ```
 
-## Docs
+## Help
 
-Comming soon.
+You can run the --help option to learn about the `create` and `search` commands.
+
+```
+refiner --help
+
+```
