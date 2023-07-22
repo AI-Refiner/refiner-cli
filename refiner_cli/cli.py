@@ -2,6 +2,7 @@
 import click
 import uuid
 from refiner.embeddings import Embeddings
+from refiner.integrations import PineconeClient
 
 ###
 # CLI command group
@@ -77,6 +78,56 @@ def search(text, index_id, limit, namespace, config_file, openai_api_key, pineco
         click.echo('Error: {}'.format(results['error']))
         return
     click.echo(results)
+
+
+@cli.command()
+@click.option('--config-file', required=False)
+@click.option('--pinecone-api-key', required=False)
+@click.option('--pinecone-environment-name', required=False)
+def list_indexes(config_file, pinecone_api_key, pinecone_environment_name):
+    """List indexs from Refiner"""
+
+    click.echo('Listing indexes for {}'.format(pinecone_environment_name))
+    
+    #use PineconeClient to delete index
+    pinecone_client = PineconeClient(api_key=pinecone_api_key, environment_name=pinecone_environment_name, config_file=config_file)
+    response = pinecone_client.pinecone.list_indexes()
+    click.echo(response)
+
+
+@cli.command()
+@click.option('--index-id', required=True)
+@click.option('--config-file', required=False)
+@click.option('--pinecone-api-key', required=False)
+@click.option('--pinecone-environment-name', required=False)
+def delete_index(index_id, config_file, pinecone_api_key, pinecone_environment_name):
+    """Delete an index from Refiner"""
+
+    click.echo('Deleting index {} from Refiner...'.format(index_id))
+    
+    #use PineconeClient to delete index
+    pinecone_client = PineconeClient(api_key=pinecone_api_key, environment_name=pinecone_environment_name, config_file=config_file)
+    response = pinecone_client.pinecone.delete_index(index_id)
+    click.echo(response)
+
+
+@cli.command()
+@click.option('--index-id', required=True)
+@click.option('--vector-id', required=True)
+@click.option('--namespace', required=False)
+@click.option('--config-file', required=False)
+@click.option('--pinecone-api-key', required=False)
+@click.option('--pinecone-environment-name', required=False)
+def delete_vector(index_id, vector_id, namespace=None, config_file=None, pinecone_api_key=None, pinecone_environment_name=None):
+    """Delete a vector from Refiner"""
+
+    click.echo('Deleting vector {} from index {}...'.format(vector_id, index_id))
+    
+    #use PineconeClient to delete vector
+    pinecone_client = PineconeClient(api_key=pinecone_api_key, environment_name=pinecone_environment_name, config_file=config_file)
+    index = pinecone_client.pinecone.Index(index_id)
+    response = index.delete(ids=[vector_id], namespace=namespace)
+    click.echo(response)
 
 
 ###
